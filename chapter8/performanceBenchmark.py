@@ -2,6 +2,7 @@ import torch
 from pathlib import Path
 from time import perf_counter
 import numpy as np
+from datasets import load_metric
 
 
 class PerformanceBenchmark:
@@ -9,6 +10,7 @@ class PerformanceBenchmark:
         self.pipeline = pipeline
         self.dataset = dataset
         self.optim_type = optim_type
+        self.intents = dataset.features['intent']
 
     def compute_accuracy(self):
         """This overrides the PerformanceBenchmark.compute_accuracy() method"""
@@ -16,8 +18,9 @@ class PerformanceBenchmark:
         for example in self.dataset:
             pred = self.pipeline(example["text"])[0]["label"]
             label = example["intent"]
-            preds.append(intents.str2int(pred))
+            preds.append(self.intents.str2int(pred))
             labels.append(label)
+        accuracy_score  = load_metric('accuracy')
         accuracy = accuracy_score.compute(predictions=preds, references=labels)
         print(f"Accuracy on test set - {accuracy['accuracy']:.3f}")
         return accuracy
@@ -34,7 +37,7 @@ class PerformanceBenchmark:
         print(f"Model size (MB) - {size_mb: .2f}")
         return {"size_mb": size_mb}
 
-    def time_pipeline(self):
+    def time_pipeline(self, query='What is the pin number for my account?'):
         """This overrides the PerformanceBenchmark.time_pipeline() method"""
         latencies = []
         # Warmup
@@ -58,12 +61,3 @@ class PerformanceBenchmark:
         metrics[self.optim_type].update(self.time_pipeline())
         metrics[self.optim_type].update(self.compute_accuracy())
         return metrics
-
-
-from datasets import load_dataset
-
-clinc = load_dataset("clinc_oos", "plus")
-
-from dataset import load_metric
-
-accuracy_score = load_metric("accuracy")
