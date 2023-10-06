@@ -92,16 +92,15 @@ y_preds = np.argmax(preds_output.predictions, axis=1)
 # y_train = np.array(emotions_hidden['train']['label'])
 # y_valid = np.array(emotions_hidden['validation']['label'])
 
-labels = emotions["train"].features["label"].names
-y_valid = np.array(emotions['validation']['label'])
+# labels = emotions["train"].features["label"].names
+# y_valid = np.array(emotions['validation']['label'])
 
-def plot_confusion_matrix(y_preds, y_true, labels):
-  print('*')*200
-  cm = confusion_matrix(y_true, y_preds, normalize='true')
-  fig, ax = plt.subplots(figsize=(6,6))
-  disp = ConfusionMatrixDisplay(confusion_matrix=cm, display_labels=labels)
-  disp.plot(cmap='Blues', values_format='.2f', ax=ax, colorbar=False)
-  plt.title('Normalized confusion matrix')
-  plt.show()
+# def plot_confusion_matrix(y_preds, y_true, labels):
+#   cm = confusion_matrix(y_true, y_preds, normalize='true')
+#   fig, ax = plt.subplots(figsize=(6,6))
+#   disp = ConfusionMatrixDisplay(confusion_matrix=cm, display_labels=labels)
+#   disp.plot(cmap='Blues', values_format='.2f', ax=ax, colorbar=False)
+#   plt.title('Normalized confusion matrix')
+#   plt.show()
 
-plot_confusion_matrix(y_preds, y_valid, labels)
+# plot_confusion_matrix(y_preds, y_valid, labels)
